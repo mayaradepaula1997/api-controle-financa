@@ -94,7 +94,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não existe"));
 
-        if (updateUser.name() != null) user.setName(updateUser.name());  //Se o novo nome NÃO for nulo, atualize o nome, caso contrário, mantenha o antigo
+        if (updateUser.name() != null) user.setName(updateUser.name());  //Se o nome NÃO for nulo, atualize o nome, caso contrário, mantenha o antigo
         if (updateUser.email() != null) user.setEmail(updateUser.email());
         if (updateUser.password() != null) user.setPasswordUser(passwordEncoder.encode(updateUser.password()));
         if (updateUser.salary() != null) user.setSalary(updateUser.salary());
