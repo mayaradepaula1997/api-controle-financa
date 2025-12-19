@@ -1,5 +1,4 @@
 package com.devestudo.projeto_financas.config;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,10 +42,21 @@ public class SecurityConfiguration {
                         .requestMatchers("/expenses/**").authenticated()
 
                         //USER - Somente Admin pode atualizar, listar e deletar
+                        .requestMatchers(HttpMethod.GET, "/users/**").authenticated() //permite que o usuario logado liste e atualize os dados dele
+                        .requestMatchers(HttpMethod.PUT, "/users/**").authenticated()
                         .requestMatchers("/users/**").hasRole("ADMIN")
+
+                        .requestMatchers("/swagger-ui/**").permitAll()
+
+                        //PERMISSOES - Para que o Swagger possa fazer requisiçoes na minha API
+                        .requestMatchers("/swagger-ui/**")
+                        .permitAll()
+                        .requestMatchers("/v3/api-docs*/**")
+                        .permitAll()
 
                         .anyRequest().authenticated()
                 )
+
 
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //Antes que o filtro de cima aconteça, para verificar se o token foi passado
                 .build();  // ← importante: retorna o SecurityFilterChain
@@ -65,6 +75,7 @@ public class SecurityConfiguration {
 
         return  authenticationConfiguration.getAuthenticationManager();
     }
+
 }
 
 

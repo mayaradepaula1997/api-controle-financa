@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id") //permite que o usuario logado possa fazer essa requisição
     public ResponseEntity<UserDto> listById(@PathVariable Long id){
 
         if (id < 0){
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id") //permite que o usuario logado possa fazer essa requisição
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UpdateUser updateUser){
 
         UserDto userUpdate = userService.updateUser(id, updateUser);
