@@ -10,6 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 //CLASSE DE CONFIGURAÇÃO DO SWAGGER
+
+/*Essa classe apenas ensina o Swagger:
+-Que sua API usa JWT
+-Onde o token deve ser enviado
+-Qual é o formato do token*
+Como montar o botão Authorize */
+
+
 @Configuration
 public class SwaggerConfig {
     String schemeName = "bearerAuth";
