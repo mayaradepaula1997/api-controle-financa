@@ -93,6 +93,8 @@ public class ExpenseService {
 
         if(updateExpenseDto.value() != null)expense.setValue(updateExpenseDto.value());
 
+        if (updateExpenseDto.description() != null)expense.setDescription(updateExpenseDto.description());
+
         //É NECESSARIA BUSCAR A CATEGORIA, PORQUE O DTO ESPERA UM LONG E O SETCATEGORY UMA CATEGORIA
         //NESSE CASO VOU TRAZER A CATEGORIA ATRAVES DO SEU ID
         if(updateExpenseDto.categoryId() != null){

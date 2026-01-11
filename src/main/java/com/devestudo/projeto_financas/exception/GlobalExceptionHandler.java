@@ -10,7 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
-@ControllerAdvice //esse anotação e como se fosse um guardião que intercepta exceções lançadas no controller
+@ControllerAdvice //Essa anotação é como se fosse um guardião que intercepta exceções lançadas no controller
 public class GlobalExceptionHandler{
 
 
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    //Quando ocorrer algo inesperado
+    //Quando ocorrer algo erro inesperado
     @ExceptionHandler(Exception.class)//Captura qualquer exceção não tratada acima, qualquer erro inesperado
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, WebRequest request){
 

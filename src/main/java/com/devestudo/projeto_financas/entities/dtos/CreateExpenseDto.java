@@ -1,7 +1,5 @@
 package com.devestudo.projeto_financas.entities.dtos;
 
-import jakarta.annotation.Nullable;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
