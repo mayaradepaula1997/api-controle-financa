@@ -52,15 +52,6 @@ public class CategoryService {
 
 
 
-   /* //Método para listar categoria
-    public List<Category> categoryList(Long userId){  // PESQUISAR
-
-        return categoryRepository.findByUserId(userId);
-
-    }*/
-
-
-
     //Método para listar as categorias daquele determinado usuario - EM FORMA DE PAGINAÇÃO
     public Page<Category> getCategoriesByUser(int page, int size, Long userId){
 

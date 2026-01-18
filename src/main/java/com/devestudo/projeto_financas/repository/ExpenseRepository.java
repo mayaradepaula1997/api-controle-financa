@@ -1,11 +1,11 @@
 package com.devestudo.projeto_financas.repository;
 
 import com.devestudo.projeto_financas.entities.Expense;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+//Já possui o CRUD e a paginação(Pageable)
+//JpaSpecificationExecutor: Permite utilizar o Specification, que cria filtros dinâmicos usando criterios
 
-    Page<Expense> findByUserId(Long userId, Pageable pageable);//método que busca todas as categorias que um usuario em formato de paginação
+public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
 }

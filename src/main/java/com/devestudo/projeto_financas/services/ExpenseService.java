@@ -3,9 +3,11 @@ import com.devestudo.projeto_financas.entities.Category;
 import com.devestudo.projeto_financas.entities.Expense;
 import com.devestudo.projeto_financas.entities.User;
 import com.devestudo.projeto_financas.entities.dtos.CreateExpenseDto;
+import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
+import com.devestudo.projeto_financas.filter.ExpenseSpecification;
 import com.devestudo.projeto_financas.repository.CategoryRepository;
 import com.devestudo.projeto_financas.repository.ExpenseRepository;
 import com.devestudo.projeto_financas.repository.UserRepository;
@@ -13,9 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 
 @Service
@@ -74,11 +78,48 @@ public class ExpenseService {
     }
 
     //Todos os gastos de um determinado usuario, por PAGINAÇÃO
-    public Page<Expense> expenseList(int page, int size, Long userId){
+    public Page<ExpenseResponseDto> listExpensesWithFilter(
+            Long userId,
+            BigDecimal minValue,
+            BigDecimal maxValue,
+            Long categoryId,
+            int page,
+            int size
+    ){
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
 
-        return expenseRepository.findByUserId(userId, pageable); //se ele existir, retornamos a lista de categorias vinculadas
+        Specification<Expense> spec =
+                ExpenseSpecification.byUser(userId)
+                        .and(ExpenseSpecification.minValue(minValue))
+                        .and(ExpenseSpecification.maxValue(maxValue))
+                        .and(ExpenseSpecification.category(categoryId));
+
+
+        return expenseRepository.findAll(spec, pageable) //se ele existir, retornamos a lista de categorias vinculadas
+                .map(expense -> {
+
+                    Long catId = null;
+                    String catName = null;
+
+                    if (expense.getCategory() != null){
+                        catId = expense.getCategory().getId();
+                        catName = expense.getCategory().getName();
+                    }
+
+                    return new ExpenseResponseDto(
+
+                            expense.getId(),
+                            expense.getDescription(),
+                            expense.getValue(),
+                            expense.getLocalDate(),
+                            expense.getDescription(),
+                            catId,
+                            catName,
+                            expense.getUser().getId(),
+                            expense.getUser().getName()
+                    );
+                });
     }
 
 

@@ -12,7 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 @RestController
 @RequestMapping("/expenses")
@@ -93,36 +94,24 @@ public class ExpenseController {
     @GetMapping
     public ResponseEntity<Page<ExpenseResponseDto>> listExpenseUser(
             @AuthenticationPrincipal User user,
+
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size){
+            @RequestParam(defaultValue = "5") int size,
 
-        Page<ExpenseResponseDto> expenseList = expenseService.expenseList(page, size, user.getId())//Busca os gasto do usuario autenticado
+            @RequestParam(required = false) BigDecimal minValue,
+            @RequestParam (required = false) BigDecimal maxValue,
+            @RequestParam(required = false) Long categoryId) {
 
-                .map(expense -> {  //Para cada gastos converta a Entidade -> Dto
 
-                    //Gasto pode ter ou não Categoria
-                    Long categoryId = null;
-                    String categoryName = null;
+        Page<ExpenseResponseDto> expenseList = expenseService.listExpensesWithFilter(
+                        user.getId(),
+                        minValue,
+                        maxValue,
+                        categoryId,
+                        page,
+                        size
+                        );//Busca os gasto do usuario autenticado
 
-                    if (expense.getCategory() != null){
-                        categoryId = expense.getCategory().getId();
-                        categoryName = expense.getCategory().getName();
-
-                    }
-
-                    return new ExpenseResponseDto(
-                            expense.getId(),
-                            expense.getName(),
-                            expense.getValue(),
-                            expense.getLocalDate(),
-                            expense.getDescription(),
-                            categoryId,
-                            categoryName,
-                            user.getId(),
-                            user.getName()
-                    );
-
-                });
 
         return ResponseEntity.ok().body(expenseList);
     }
