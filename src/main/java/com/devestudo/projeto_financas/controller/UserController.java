@@ -5,12 +5,12 @@ import com.devestudo.projeto_financas.entities.dtos.UpdateUser;
 import com.devestudo.projeto_financas.entities.dtos.UserDto;
 import com.devestudo.projeto_financas.entities.dtos.UserResponseDto;
 import com.devestudo.projeto_financas.services.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -44,9 +44,12 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')") //Apenas o usuario de tiver a role ADMIN, vai poder listar
-    public ResponseEntity <List<UserDto>> listUser(){
+    public ResponseEntity <Page<UserDto>> listUser(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ){
 
-        List<UserDto> userDtos = userService.listUser();
+        Page<UserDto> userDtos = userService.listUser(page, size);
 
         return ResponseEntity.ok(userDtos);
     }

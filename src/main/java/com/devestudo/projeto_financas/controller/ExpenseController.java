@@ -6,6 +6,7 @@ import com.devestudo.projeto_financas.entities.dtos.CreateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
 import com.devestudo.projeto_financas.services.ExpenseService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -88,12 +89,15 @@ public class ExpenseController {
 
     }
 
-    //Método que vai listar todos os gastos daquele usuario
+    //Método que vai  trazer todos os gastos daquele usuario - PAGINAÇÃO
     @GetMapping
-    public ResponseEntity<List<ExpenseResponseDto>> listExpenseUser(@AuthenticationPrincipal User user){
+    public ResponseEntity<Page<ExpenseResponseDto>> listExpenseUser(
+            @AuthenticationPrincipal User user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size){
 
-        List<ExpenseResponseDto> expenseList = expenseService.expenseList(user.getId())//Busca os gasto do usuario autenticado
-                .stream() //Converte a lista retornada
+        Page<ExpenseResponseDto> expenseList = expenseService.expenseList(page, size, user.getId())//Busca os gasto do usuario autenticado
+
                 .map(expense -> {  //Para cada gastos converta a Entidade -> Dto
 
                     //Gasto pode ter ou não Categoria
@@ -118,8 +122,7 @@ public class ExpenseController {
                             user.getName()
                     );
 
-                })
-                .toList();
+                });
 
         return ResponseEntity.ok().body(expenseList);
     }

@@ -9,6 +9,10 @@ import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
 import com.devestudo.projeto_financas.repository.CategoryRepository;
 import com.devestudo.projeto_financas.repository.ExpenseRepository;
 import com.devestudo.projeto_financas.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,10 +73,12 @@ public class ExpenseService {
       return expense;
     }
 
-    //Listar todos os gastos de um determinado usuario
-    public List<Expense> expenseList(Long userId){
+    //Todos os gastos de um determinado usuario, por PAGINAÇÃO
+    public Page<Expense> expenseList(int page, int size, Long userId){
 
-       return expenseRepository.findByUserId(userId); //se ele existir, retornamos a lista de categorias vinculadas
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+
+        return expenseRepository.findByUserId(userId, pageable); //se ele existir, retornamos a lista de categorias vinculadas
     }
 
 

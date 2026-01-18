@@ -8,6 +8,10 @@ import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
 import com.devestudo.projeto_financas.repository.CategoryRepository;
 import com.devestudo.projeto_financas.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,16 +58,20 @@ public class UserService {
 
     }
 
-    public List<UserDto> listUser() {
+    //Método vai retornar os usuários em formato de paginação
+    public Page<UserDto> listUser(int page, int size) {
 
-        return userRepository.findAll().stream()  //converte a lista que veio do banco em uma stream
-                .map(user -> new UserDto(    //map: transforma cada User em UserDto(para retornar apenas os dados que eu desejo)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+
+        return userRepository.findAll(pageable) //findAll - para paginação
+
+                .map(user -> new UserDto(    //map: transforma cada User dentro da pagina em UserDto
                         user.getId(),
                         user.getName(),
                         user.getEmail(),
                         user.getSalary()
 
-                )).toList();
+                ));
     }
 
 

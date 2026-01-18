@@ -8,6 +8,10 @@ import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
 import com.devestudo.projeto_financas.repository.CategoryRepository;
 import com.devestudo.projeto_financas.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,8 +61,8 @@ public class CategoryService {
 
 
 
-    //Método para listar as categorias daquele determinado usuario
-    public List<Category> getCategoriesByUser(Long userId){
+    //Método para listar as categorias daquele determinado usuario - EM FORMA DE PAGINAÇÃO
+    public Page<Category> getCategoriesByUser(int page, int size, Long userId){
 
         Optional<User> optionalUser = userRepository.findById(userId); //buscamos o usuario no BD
 
@@ -66,7 +70,10 @@ public class CategoryService {
                 throw new ResourceNotFoundException("Usuário não encontrado"); //se não existir lança a exceção
 
             }
-            return categoryRepository.findByUserId(userId); //se ele existir, retornamos a lista de categorias vinculadas
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending()); //ordenando pelo nome em ordem decrecente
+
+            return categoryRepository.findByUserId(userId, pageable);
     }
 
 

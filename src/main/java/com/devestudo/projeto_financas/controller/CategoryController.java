@@ -6,13 +6,13 @@ import com.devestudo.projeto_financas.entities.dtos.CategoryResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.CreateCategoryDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateCategoryDto;
 import com.devestudo.projeto_financas.services.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -38,32 +38,26 @@ public class CategoryController {
     }
 
 
-    /*@GetMapping
-    public ResponseEntity<List<Category>> listAll(Authentication authentication){
 
-        User user = (User) authentication.getPrincipal();
-
-        List<Category> categoryList = categoryService.categoryList(user.getId());
-
-        return ResponseEntity.ok(categoryList);
-    }*/
-
-
-
-    //Método que retorna a lista que categoria vinculado aquele usuario
+    //OBS:  nunca usar STREAM() quando estiver trabalhando com Page
+    //O Page do Spring tem seu proprio page.map(), transforma Entity - DTO
+    //Busca as categorias cadastradas para o usuário autenticado - PAGINAÇÃO
     @GetMapping
-    public ResponseEntity<List<CategoryResponseDto>> getCategoriesByUser(@AuthenticationPrincipal User user){ //injeta automaticamento o usuario autenticado
+    public ResponseEntity<Page<CategoryResponseDto>> getCategoriesByUser(
+            @AuthenticationPrincipal User user,                      //injeta automaticamento o usuario autenticado
+            @RequestParam(defaultValue = "0") int page,              //se a paginanão não for passada, por padrão vai vim a primeira pagina
+            @RequestParam(defaultValue = "5") int size
+    ){
 
-        List<CategoryResponseDto> response = categoryService.getCategoriesByUser(user.getId())//Pega a lista de categorias daquel usuario
-                .stream()   //transforma a lista que recebeu
-                .map(category -> new CategoryResponseDto( //map: para cada categoria, vou criar a categoria dto (Entity → DTO)
+        Page<CategoryResponseDto> response = categoryService.getCategoriesByUser(page, size,user.getId())       //Pega a lista de categorias daquele usuario
+                                                                                                               //user.geyId -> pega o id do usuário autentidado
+
+                .map(category -> new CategoryResponseDto(                     //Map -> Pega cada categoria e transforma CategoryResponseDto
                         category.getId(),
                         category.getName(),
                         user.getId(),
                         user.getName()
-                ))
-                .toList(); //transforma novamente em uma lista
-
+                ));
 
         return ResponseEntity.ok(response);
 
