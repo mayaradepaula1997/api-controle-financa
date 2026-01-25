@@ -87,7 +87,7 @@ public class ExpenseService {
             int size
     ){
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("localDate").descending()); //Ordenação por data, do gasto mais novo para o mais antigo
 
         Specification<Expense> spec =
                 ExpenseSpecification.byUser(userId)
@@ -137,6 +137,8 @@ public class ExpenseService {
         if(updateExpenseDto.name() != null)expense.setName(updateExpenseDto.name());
 
         if(updateExpenseDto.value() != null)expense.setValue(updateExpenseDto.value());
+
+        if (updateExpenseDto.localDate() != null) expense.setLocalDate(updateExpenseDto.localDate());
 
         if (updateExpenseDto.description() != null)expense.setDescription(updateExpenseDto.description());
 

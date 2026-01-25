@@ -1,12 +1,9 @@
 package com.devestudo.projeto_financas.filter;
-
-
-//Usada no Spring Data JPA para montar filtros dinâmicos de busca no banco de dados, usando o padrão Specification.
-
 import com.devestudo.projeto_financas.entities.Expense;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.math.BigDecimal;
+
+//Usada no Spring Data JPA para montar filtros dinâmicos de busca no banco de dados, usando o padrão Specification.
 
 public class ExpenseSpecification {
 
