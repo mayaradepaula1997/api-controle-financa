@@ -110,7 +110,7 @@ public class ExpenseService {
                     return new ExpenseResponseDto(
 
                             expense.getId(),
-                            expense.getDescription(),
+                            expense.getName(),
                             expense.getValue(),
                             expense.getLocalDate(),
                             expense.getDescription(),
@@ -121,8 +121,6 @@ public class ExpenseService {
                     );
                 });
     }
-
-
 
 
     //Método para atualizar o gasto - passando o id do gasto, o id do usuario
@@ -157,7 +155,6 @@ public class ExpenseService {
             }
         return expenseRepository.save(expense);
     }
-
 
 
     //Método para deletar um gasto
