@@ -1,6 +1,6 @@
 package com.devestudo.projeto_financas.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.devestudo.projeto_financas.enums.CategoryType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -18,8 +18,11 @@ public class Category {
     @NotBlank(message = "O nome é obrigatório")
     private String name;
 
+    @Enumerated(EnumType.STRING) //ENUM que será persistido no BD, será salvo como texto e não como numero
+    private CategoryType categoryType;
+
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false) //FK que liga à tabela de usuários
+    @JoinColumn(name = "user_id",nullable = true) //FK que liga à tabela de usuários
     @JsonIgnoreProperties("categories")
     private User user;
 
@@ -29,12 +32,13 @@ public class Category {
     }
 
     //Construtor com argumentos, sem passar o id
-
-    public Category(String name, User user) {
+    public Category(String name, CategoryType categoryType, User user) {
         this.name = name;
+        this.categoryType = categoryType;
         this.user = user;
     }
 
+    //Getter and Setter
     public Long getId() {
         return id;
     }
@@ -49,6 +53,14 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CategoryType getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(CategoryType categoryType) {
+        this.categoryType = categoryType;
     }
 
     public User getUser() {

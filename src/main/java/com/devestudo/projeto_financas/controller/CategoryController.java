@@ -2,6 +2,7 @@ package com.devestudo.projeto_financas.controller;
 
 import com.devestudo.projeto_financas.entities.Category;
 import com.devestudo.projeto_financas.entities.User;
+import com.devestudo.projeto_financas.entities.dtos.CategoryAvailableDto;
 import com.devestudo.projeto_financas.entities.dtos.CategoryResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.CreateCategoryDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateCategoryDto;
@@ -35,6 +36,21 @@ public class CategoryController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
+    }
+
+    //Método que retorna todas as categoria (SYSTEM E USER) que o usuário pode visualizar
+    @GetMapping("/available")
+    public ResponseEntity<Page<CategoryAvailableDto>> getAvailableCategories(
+            @AuthenticationPrincipal User user,  //Usuário autenticado
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue ="5") int size
+    ){
+
+        Long userId = user.getId();   //Usa o id do usuário autenticado
+
+        Page<CategoryAvailableDto> categories = categoryService.findAvailableCategories(userId, page, size);
+
+        return ResponseEntity.ok(categories);
     }
 
 

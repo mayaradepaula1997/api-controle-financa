@@ -5,6 +5,7 @@ import com.devestudo.projeto_financas.entities.User;
 import com.devestudo.projeto_financas.entities.dtos.CreateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
+import com.devestudo.projeto_financas.enums.CategoryType;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
 import com.devestudo.projeto_financas.filter.ExpenseSpecification;
@@ -37,25 +38,34 @@ public class ExpenseService {
         this.categoryRepository = categoryRepository;
     }
 
+    //Criação de categoria
     public Expense createExpense(CreateExpenseDto dto, Long userId){
 
+        //Busca o usuário no BD
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new ResourceNotFoundException("Usúario não encontrado"));
+                .orElseThrow(()-> new ResourceNotFoundException("Usuário não encontrado"));
 
-        Category category = null;  //Permite criar uma gasto sem categoria
-
-        if(dto.categoryId() != null){  //Se o usuário passou uma categoria
-            category = categoryRepository.findById(dto.categoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
-
-            // Verifica se a categoria pertence ao usuário, ou seja verifica se quem crio o gasto é o dona categoria
-            if (!category.getUser().equals(user)){
-
-                throw new BusinessException("Categoria não encontrada");
-            }
+        if (dto.categoryId() == null){
+            throw new BusinessException("Categoria é obrigatória");
         }
-       
-        Expense expense = new Expense(dto.name(), dto.value(), dto.localDate(), dto.description(), category, user);
+
+        Category category = categoryRepository.findById(dto.categoryId())
+                .orElseThrow(()-> new ResourceNotFoundException("Categoria não encontrada"));
+
+        if (category.getCategoryType() == CategoryType.USER &&
+        !category.getUser().getId().equals(user.getId())){
+
+            throw new BusinessException("Categoria não pertence ao usuário");
+        }
+
+        Expense expense = new Expense(
+                dto.name(),
+                dto.value(),
+                dto.localDate(),
+                dto.description(),
+                category,
+                user
+        );
 
         return expenseRepository.save(expense);
 

@@ -35,4 +35,5 @@ public class ExpenseSpecification {
                 categoryId == null ? null :
                         cb.equal(root.get("category").get("id"), categoryId);
     }
+
 }

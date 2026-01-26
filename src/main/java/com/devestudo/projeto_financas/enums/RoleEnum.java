@@ -1,5 +1,6 @@
 package com.devestudo.projeto_financas.enums;
 
+//REPRESENTA UM CONJUNTO DE VALORES FIXOS
 public enum RoleEnum {
 
     ADMIN("admin"),
