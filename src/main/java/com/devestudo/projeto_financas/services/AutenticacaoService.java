@@ -66,7 +66,7 @@ public class AutenticacaoService implements UserDetailsService {
     }
 
 
-    //Método que vai validar se o token passar é valido, esse método pode lançar um exceção
+    //Método que vai validar se o token enviado é valido, esse método pode lançar um exceção
     public String validarTokenJwt (String token){  //Esse método retorna o login do usuario
 
         try {

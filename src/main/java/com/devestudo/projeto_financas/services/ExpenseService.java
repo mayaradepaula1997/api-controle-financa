@@ -158,8 +158,12 @@ public class ExpenseService {
             Category category = categoryRepository.findById(updateExpenseDto.categoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Categoria não existe"));
 
-            if (!category.getUser().getId().equals(idUser)){
-                throw new BusinessException(" Você não pode usar essa categoria");
+            //O usuário só deve ser bloqueado se a categoria for do tipo USER e não pertencer a ele
+            //SÓ verifique o usuário se a categoria for do tipo USER
+            if (category.getCategoryType() == CategoryType.USER &&
+            !category.getUser().getId().equals(idUser)){
+
+                throw new BusinessException("Você não pode usar essa categoria");
             }
 
             expense.setCategory(category);
