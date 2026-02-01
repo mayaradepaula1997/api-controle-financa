@@ -87,23 +87,26 @@ public class ExpenseService {
       return expense;
     }
 
-    //Todos os gastos de um determinado usuario, por PAGINAÇÃO
+    //Todos os gastos de um determinado usuario, por PAGINAÇÃO e FILTER SPECIFICATION
     public Page<ExpenseResponseDto> listExpensesWithFilter(
             Long userId,
             BigDecimal minValue,
             BigDecimal maxValue,
             Long categoryId,
+            String text,
             int page,
             int size
     ){
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("localDate").descending()); //Ordenação por data, do gasto mais novo para o mais antigo
 
+        //Aplicação dos filtros
         Specification<Expense> spec =
-                ExpenseSpecification.byUser(userId)
+                ExpenseSpecification.byUser(userId)  //Gastos do usuário logado
                         .and(ExpenseSpecification.minValue(minValue))
                         .and(ExpenseSpecification.maxValue(maxValue))
-                        .and(ExpenseSpecification.category(categoryId));
+                        .and(ExpenseSpecification.category(categoryId))
+                        .and(ExpenseSpecification.nameOrDescriptionContains(text)); //text, vai vim do controller, vai ser capturado o valor que o usuário digitar
 
 
         return expenseRepository.findAll(spec, pageable) //se ele existir, retornamos a lista de categorias vinculadas

@@ -18,8 +18,6 @@ public class AutenticacaoController {
     private AutenticacaoService autenticacaoService;
 
     //Construtor para fazer a injeção de dependencia
-
-
     public AutenticacaoController(AuthenticationManager authenticationManager, AutenticacaoService autenticacaoService) {
         this.authenticationManager = authenticationManager;
         this.autenticacaoService = autenticacaoService;
@@ -28,7 +26,7 @@ public class AutenticacaoController {
     @PostMapping
     public String auth(@RequestBody AuthDTo authDTo){
 
-        //UsernamePasswordAuthenticationToken - precisamos utilizar ele que o sprink consiga fazer a autentição
+        //UsernamePasswordAuthenticationToken - precisamos utilizar ele que o spring consiga fazer a autentição
         var userAutenticationToken =  new UsernamePasswordAuthenticationToken(authDTo.email(), authDTo.passwordUser());
 
         authenticationManager.authenticate(userAutenticationToken);

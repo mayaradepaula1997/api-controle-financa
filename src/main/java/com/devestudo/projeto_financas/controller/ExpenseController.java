@@ -98,6 +98,7 @@ public class ExpenseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
 
+            @RequestParam(required = false) String text,
             @RequestParam(required = false) BigDecimal minValue,
             @RequestParam (required = false) BigDecimal maxValue,
             @RequestParam(required = false) Long categoryId) {
@@ -108,6 +109,7 @@ public class ExpenseController {
                         minValue,
                         maxValue,
                         categoryId,
+                        text,
                         page,
                         size
                         );//Busca os gasto do usuario autenticado

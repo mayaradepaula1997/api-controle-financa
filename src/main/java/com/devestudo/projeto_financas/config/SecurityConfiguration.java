@@ -70,6 +70,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    //Método que vai fazer a autenticação do usuário pelo email e senha e pode lançar uma exceção
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 

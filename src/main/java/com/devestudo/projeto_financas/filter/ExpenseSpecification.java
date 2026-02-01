@@ -1,5 +1,6 @@
 package com.devestudo.projeto_financas.filter;
 import com.devestudo.projeto_financas.entities.Expense;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
 
@@ -34,6 +35,26 @@ public class ExpenseSpecification {
         return (root, query, cb) ->
                 categoryId == null ? null :
                         cb.equal(root.get("category").get("id"), categoryId);
+    }
+
+    //Busca os gastos de tenha no nome ou na descrição a String que foi passada. Ex: "Uber"
+    public static Specification<Expense> nameOrDescriptionContains(String text){
+
+        return (root, query, cb) ->{
+
+           if (text == null || text.isBlank()){
+               return cb.conjunction();  //Não vai filtrar nada, vai trazer todos os gastos
+           }
+
+           String like = "%" + text.toLowerCase() + "%";  //Permite buscar a palavra e igora maiúsculas/minúsculas
+
+            Predicate namePredicate = cb.like(cb.lower(root.get("name")),like); //Condição WHERE, se for verdadeira irá retornar
+
+            Predicate descriptionPredicate = cb.like(cb.lower(root.get("description")), like);
+
+            return cb.or(namePredicate, descriptionPredicate); //Vai trazer o gasto se o nome bater OU a descrição bater
+
+        };
     }
 
 }

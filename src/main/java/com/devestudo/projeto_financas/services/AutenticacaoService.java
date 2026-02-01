@@ -28,18 +28,18 @@ public class AutenticacaoService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    //Método para buscar o usuario no momento do login, para validar o usuário
+    //Método que busca o usuario no momento do login e valida esse usuário
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email);
     }
 
-
+    //Método para obter o token, passando o email e senha
     public String obterToken (AuthDTo authDTo){
 
         User user = userRepository.findByEmail(authDTo.email());
 
-        return gerarTokenJwt(user);
+        return gerarTokenJwt(user);   //Chama o método que gera o token
     }
 
 
@@ -52,9 +52,9 @@ public class AutenticacaoService implements UserDetailsService {
 
             //Configurações para gerar o token
             String token = JWT.create()
-                    .withIssuer("projeto-financas")          //Quem gerou o token - se foi gerardo pela minha aplicação
-                    .withSubject(user.getEmail())           //Quem é o dono do token
-                    .withClaim("userId",user.getId())
+                    .withIssuer("projeto-financas")            //Quem gerou o token -foi gerado pela minha aplicação
+                    .withSubject(user.getEmail())             //Quem é o dono do token
+                    .withClaim("userId",user.getId())   //Coloca o ID do usuário no token, carrega o userId, sem precisar buscar no BD
                     .withExpiresAt(gerarDataExpiracao())     //Tempo de inspiração do token
                     .sign(algorithm);                        //Assinatura com  algoritmo da chave secreta
 
