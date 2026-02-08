@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-//Classe que vai interceptar, vai extrair o token, validar e lê o usuário que está dentro do token
+//Classe que vai interceptar, vai extrair o token, validar e ler o usuário que está dentro do token
 //SE TUDO ESTIVER "OK" O SPRING SECURITY CRIA UM OBJETO "AUTHENTICATION"
 
 @Component     //Componente da nossa aplicação
@@ -28,7 +28,6 @@ public class SecurityFilter  extends OncePerRequestFilter { //A cada requisiçã
         this.autenticacaoService = autenticacaoService;
         this.userRepository = userRepository;
     }
-
 
 
     @Override

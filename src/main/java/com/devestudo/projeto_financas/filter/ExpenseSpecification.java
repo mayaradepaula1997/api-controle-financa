@@ -3,6 +3,7 @@ import com.devestudo.projeto_financas.entities.Expense;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 //Usada no Spring Data JPA para montar filtros dinâmicos de busca no banco de dados, usando o padrão Specification.
 
@@ -22,7 +23,7 @@ public class ExpenseSpecification {
     }
 
 
-    //Filtro pelo valor maximi, se for NULL, o filtro não é aplicado
+    //Filtro pelo valor maximo, se for NULL, o filtro não é aplicado
     public static Specification<Expense> maxValue(BigDecimal maxValue) {
         return (root, query, cb) ->
                 maxValue == null ? null :
@@ -57,4 +58,14 @@ public class ExpenseSpecification {
         };
     }
 
-}
+    /*Método que vai retorna os gastos por periodo (dataInicio - dataFinal) se não for passado o perido
+    vai retornar os gasto daquele mês*/
+    public static Specification<Expense> byPeriod (LocalDate dateStart,LocalDate endDate) {
+
+        return (root, query, cb) ->
+            cb.between(root.get("localDate"), dateStart, endDate);
+        }
+
+    }
+
+

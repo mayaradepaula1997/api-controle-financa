@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration  //Sinaliza para o spring que essa é uma classe de configuração / define como o sistema deve funcionar
-@EnableWebSecurity //Ativa o Spring Security para requeisições HTTP
+@EnableWebSecurity //Ativa o Spring Security para requisições HTTP
 @EnableMethodSecurity  //Permitir que os métodos sejam protegidos por regra de segurança - Só o admin pode acessar
 public class SecurityConfiguration {
 

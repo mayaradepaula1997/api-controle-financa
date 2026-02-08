@@ -7,12 +7,14 @@ import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
 import com.devestudo.projeto_financas.services.ExpenseService;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @RestController
@@ -93,15 +95,23 @@ public class ExpenseController {
     //Método que vai  trazer todos os gastos daquele usuario - PAGINAÇÃO
     @GetMapping
     public ResponseEntity<Page<ExpenseResponseDto>> listExpenseUser(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal User user, //usuário autenticado, que vem do token
 
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int page, //paginação
             @RequestParam(defaultValue = "5") int size,
 
-            @RequestParam(required = false) String text,
+            @RequestParam(required = false) String text, //parametro que pode vim da url, required = false = pametro opcional
             @RequestParam(required = false) BigDecimal minValue,
             @RequestParam (required = false) BigDecimal maxValue,
-            @RequestParam(required = false) Long categoryId) {
+            @RequestParam(required = false) Long categoryId,
+
+            @RequestParam (required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) //converte o parametro da url, para esse formato de data
+            LocalDate dateStart,
+
+            @RequestParam (required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
 
 
         Page<ExpenseResponseDto> expenseList = expenseService.listExpensesWithFilter(
@@ -110,9 +120,11 @@ public class ExpenseController {
                         maxValue,
                         categoryId,
                         text,
+                        dateStart,
+                        endDate,
                         page,
                         size
-                        );//Busca os gasto do usuario autenticado
+                        );
 
 
         return ResponseEntity.ok().body(expenseList);

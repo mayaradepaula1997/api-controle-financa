@@ -20,7 +20,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 
 @Service
@@ -94,9 +96,44 @@ public class ExpenseService {
             BigDecimal maxValue,
             Long categoryId,
             String text,
+            LocalDate dateStart,
+            LocalDate endDate,
             int page,
             int size
     ){
+
+        //VALIDAÇÕES DE DATA
+        LocalDate now = LocalDate.now();
+
+        //Verifica se a data inicial é maior que a data de hoje(now)
+        if (dateStart != null && dateStart.isAfter(now)){  //isAfter = "É depois"
+            throw new BusinessException("A data inicial não pode ser futura");
+        }
+
+        //Verifica se a data final não é uma data futura - futuro não existe ainda
+        if (endDate != null && endDate.isAfter(now)){
+            throw  new BusinessException("A data final não pode ser futura");
+        }
+
+        //Verifica se a data final não é menor que a data inicial
+        if (dateStart != null && endDate != null && endDate.isBefore(dateStart)){ //isBefore = "É antes"
+            throw new BusinessException("A data final não pode ser anterior á data inicial");
+        }
+
+        //PERÍODO PADRÃO - SE O USUÁRIO NÃO INFORMAR O PERÍODO, A SISTEMA ASSUME O MêS ATUAL
+        if (dateStart == null || endDate == null){
+            YearMonth currentMonth = YearMonth.now(); //recupera o mês atual
+            dateStart = currentMonth.atDay(1); //recupera o primeiro dia do mês
+            endDate = currentMonth.atEndOfMonth();  //recupera o ultimo dia do mês
+        }
+
+        //Limite de 30 dias
+        long days = ChronoUnit.DAYS.between(dateStart, endDate); //calcula quantos dias existem entre duas datas
+
+        if (days > 30){
+            throw new BusinessException("O intervalo máximo permitido é de 30 dias");
+        }
+
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("localDate").descending()); //Ordenação por data, do gasto mais novo para o mais antigo
 
@@ -106,7 +143,8 @@ public class ExpenseService {
                         .and(ExpenseSpecification.minValue(minValue))
                         .and(ExpenseSpecification.maxValue(maxValue))
                         .and(ExpenseSpecification.category(categoryId))
-                        .and(ExpenseSpecification.nameOrDescriptionContains(text)); //text, vai vim do controller, vai ser capturado o valor que o usuário digitar
+                        .and(ExpenseSpecification.nameOrDescriptionContains(text)) //text, vai vim do controller, vai ser capturado o valor que o usuário digitar
+                        .and(ExpenseSpecification.byPeriod(dateStart, endDate));
 
 
         return expenseRepository.findAll(spec, pageable) //se ele existir, retornamos a lista de categorias vinculadas

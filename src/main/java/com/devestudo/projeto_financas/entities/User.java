@@ -59,9 +59,6 @@ public class User implements UserDetails {
     }
 
 
-    //Métodos da classe criada
-
-
     public Long getId() { return id;}
 
     public void setId(Long id) {this.id = id;}
@@ -105,7 +102,6 @@ public class User implements UserDetails {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
-
 
 
     //Métodos do UserDetails
