@@ -2,10 +2,12 @@ package com.devestudo.projeto_financas.controller;
 
 import com.devestudo.projeto_financas.entities.Expense;
 import com.devestudo.projeto_financas.entities.User;
+import com.devestudo.projeto_financas.entities.dtos.CategorySummaryDto;
 import com.devestudo.projeto_financas.entities.dtos.CreateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
 import com.devestudo.projeto_financas.services.ExpenseService;
+import com.devestudo.projeto_financas.services.ExpenseSummaryService;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -23,8 +26,11 @@ public class ExpenseController {
 
     private ExpenseService expenseService;
 
-    public ExpenseController(ExpenseService expenseService) {
+    private ExpenseSummaryService expenseSummaryService;
+
+    public ExpenseController(ExpenseService expenseService, ExpenseSummaryService summaryService) {
         this.expenseService = expenseService;
+        this.expenseSummaryService = summaryService;
     }
 
     @PostMapping
@@ -106,7 +112,7 @@ public class ExpenseController {
             @RequestParam(required = false) Long categoryId,
 
             @RequestParam (required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) //converte o parametro da url, para esse formato de data
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) //converte o parametro da url em formato de data
             LocalDate dateStart,
 
             @RequestParam (required = false)
@@ -129,8 +135,6 @@ public class ExpenseController {
 
         return ResponseEntity.ok().body(expenseList);
     }
-
-
 
     //Método para atualizar os gastos
     @PutMapping("/{expenseId}")

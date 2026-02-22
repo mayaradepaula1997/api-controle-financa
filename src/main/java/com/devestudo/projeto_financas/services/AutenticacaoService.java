@@ -34,13 +34,6 @@ public class AutenticacaoService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    //Método para obter o token, passando o email e senha
-    public String obterToken (AuthDTo authDTo){
-
-        User user = userRepository.findByEmail(authDTo.email());
-
-        return gerarTokenJwt(user);   //Chama o método que gera o token
-    }
 
 
     //Método para gerar o token JWT, recebe como parametro um USUÁRIO
@@ -66,6 +59,17 @@ public class AutenticacaoService implements UserDetailsService {
     }
 
 
+
+
+    //Método para obter o token, passando o email e senha
+    public String obterToken (AuthDTo authDTo){
+
+        User user = userRepository.findByEmail(authDTo.email());
+
+        return gerarTokenJwt(user);   //Chama o método que gera o token
+    }
+
+
     //Método que vai validar se o token enviado é valido, esse método pode lançar um exceção
     public String validarTokenJwt (String token){  //Esse método retorna o login do usuario
 
@@ -83,6 +87,8 @@ public class AutenticacaoService implements UserDetailsService {
 
         }
     }
+
+
 
     //Método que gera o tempo de inspiração do token
     private Instant gerarDataExpiracao() {

@@ -137,9 +137,9 @@ public class ExpenseService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("localDate").descending()); //Ordenação por data, do gasto mais novo para o mais antigo
 
-        //Aplicação dos filtros
+        //Aplicação de filtros dinâmicos - Regra de busca na entidade Expense
         Specification<Expense> spec =
-                ExpenseSpecification.byUser(userId)  //Gastos do usuário logado
+                ExpenseSpecification.byUser(userId)  //Busca gastos apenas do usuário logado
                         .and(ExpenseSpecification.minValue(minValue))
                         .and(ExpenseSpecification.maxValue(maxValue))
                         .and(ExpenseSpecification.category(categoryId))

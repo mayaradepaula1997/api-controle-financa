@@ -29,6 +29,23 @@ public class SecurityFilter  extends OncePerRequestFilter { //A cada requisiçã
         this.userRepository = userRepository;
     }
 
+    //Método que vai extrair o token do nosso HEADER
+    public String extrairTokenHeader(HttpServletRequest request) {
+
+        var authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null) {
+            return null;
+        }
+
+        if (!authHeader.split(" ")[0].equals("Bearer")) {
+            return null;
+        }
+
+        return authHeader.split(" ")[1];    //Se encontrar o token, devolve esse token
+
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -53,21 +70,6 @@ public class SecurityFilter  extends OncePerRequestFilter { //A cada requisiçã
 
     }
 
-    //Método que vai extrair o token do nosso HEADER
-    public String extrairTokenHeader(HttpServletRequest request) {
 
-        var authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null) {
-            return null;
-        }
-
-        if (!authHeader.split(" ")[0].equals("Bearer")) {
-            return null;
-        }
-
-        return authHeader.split(" ")[1];    //Se encontrar o token, devolve esse token
-
-    }
 
 }
