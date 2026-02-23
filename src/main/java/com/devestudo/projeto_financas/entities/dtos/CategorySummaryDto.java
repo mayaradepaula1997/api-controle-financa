@@ -17,4 +17,16 @@ public class CategorySummaryDto {
         this.value = value;
         this.percentage = percentage;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public BigDecimal getPercentage() {
+        return percentage;
+    }
 }
