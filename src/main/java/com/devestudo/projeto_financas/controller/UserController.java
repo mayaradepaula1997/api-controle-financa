@@ -1,9 +1,9 @@
 package com.devestudo.projeto_financas.controller;
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.CreateUserDto;
-import com.devestudo.projeto_financas.entities.dtos.UpdateUser;
-import com.devestudo.projeto_financas.entities.dtos.UserDto;
-import com.devestudo.projeto_financas.entities.dtos.UserResponseDto;
+import com.devestudo.projeto_financas.entities.dtos.request.CreateUserDto;
+import com.devestudo.projeto_financas.entities.dtos.request.UpdateUser;
+import com.devestudo.projeto_financas.entities.dtos.request.UserDto;
+import com.devestudo.projeto_financas.entities.dtos.response.UserResponseDto;
 import com.devestudo.projeto_financas.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

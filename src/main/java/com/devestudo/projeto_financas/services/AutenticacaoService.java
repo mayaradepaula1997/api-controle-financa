@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.AuthDTo;
+import com.devestudo.projeto_financas.entities.dtos.request.AuthDTo;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,9 +31,12 @@ public class AutenticacaoService implements UserDetailsService {
     //Método que busca o usuario no momento do login e valida esse usuário
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email);
-    }
+        return userRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("Usuário não encontrado")
 
+                );
+
+    }
 
 
     //Método para gerar o token JWT, recebe como parametro um USUÁRIO
@@ -64,7 +67,8 @@ public class AutenticacaoService implements UserDetailsService {
     //Método para obter o token, passando o email e senha
     public String obterToken (AuthDTo authDTo){
 
-        User user = userRepository.findByEmail(authDTo.email());
+        User user = userRepository.findByEmail(authDTo.email())
+                .orElseThrow(()-> new RuntimeException("Usuário não encontrado"));
 
         return gerarTokenJwt(user);   //Chama o método que gera o token
     }

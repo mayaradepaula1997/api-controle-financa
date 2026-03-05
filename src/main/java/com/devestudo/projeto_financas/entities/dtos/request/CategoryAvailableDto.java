@@ -1,4 +1,4 @@
-package com.devestudo.projeto_financas.entities.dtos;
+package com.devestudo.projeto_financas.entities.dtos.request;
 
 import com.devestudo.projeto_financas.enums.CategoryType;
 

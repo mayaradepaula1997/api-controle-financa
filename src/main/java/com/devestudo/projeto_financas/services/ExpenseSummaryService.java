@@ -1,8 +1,7 @@
 package com.devestudo.projeto_financas.services;
 
-import com.devestudo.projeto_financas.entities.Category;
 import com.devestudo.projeto_financas.entities.Expense;
-import com.devestudo.projeto_financas.entities.dtos.CategorySummaryDto;
+import com.devestudo.projeto_financas.entities.dtos.response.CategorySummaryDto;
 import com.devestudo.projeto_financas.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,8 +22,6 @@ import java.util.stream.Collectors;
 public class ExpenseSummaryService {
 
     private ExpenseRepository expenseRepository;
-
-
 
     public ExpenseSummaryService(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;

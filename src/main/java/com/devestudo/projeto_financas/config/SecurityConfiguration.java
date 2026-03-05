@@ -36,6 +36,8 @@ public class SecurityConfiguration {
                         //Rotas Publicas
                         .requestMatchers("/auth/**").permitAll() //rota de autenticação
                         .requestMatchers(HttpMethod.POST,"/users").permitAll() //rota para criar usuario
+                        .requestMatchers(HttpMethod.POST,"/auth/forgot-password").permitAll() //rota para sinalizar que esqueceu a senha
+                        .requestMatchers(HttpMethod.POST,"/auth/reset-password").permitAll() //rota para cria a nova senha
 
                         //ROTAS PROTEGIDAS CATEGORIA E GASTO
                         .requestMatchers("/categories/**").authenticated()

@@ -1,7 +1,7 @@
 package com.devestudo.projeto_financas.controller;
 
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.CategorySummaryDto;
+import com.devestudo.projeto_financas.entities.dtos.response.CategorySummaryDto;
 import com.devestudo.projeto_financas.services.ExpenseSummaryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

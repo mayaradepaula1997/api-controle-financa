@@ -1,4 +1,4 @@
-package com.devestudo.projeto_financas.entities.dtos;
+package com.devestudo.projeto_financas.entities.dtos.response;
 
 import java.math.BigDecimal;
 

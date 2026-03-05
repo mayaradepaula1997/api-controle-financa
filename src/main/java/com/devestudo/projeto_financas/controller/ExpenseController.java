@@ -2,10 +2,9 @@ package com.devestudo.projeto_financas.controller;
 
 import com.devestudo.projeto_financas.entities.Expense;
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.CategorySummaryDto;
-import com.devestudo.projeto_financas.entities.dtos.CreateExpenseDto;
-import com.devestudo.projeto_financas.entities.dtos.ExpenseResponseDto;
-import com.devestudo.projeto_financas.entities.dtos.UpdateExpenseDto;
+import com.devestudo.projeto_financas.entities.dtos.request.CreateExpenseDto;
+import com.devestudo.projeto_financas.entities.dtos.response.ExpenseResponseDto;
+import com.devestudo.projeto_financas.entities.dtos.request.UpdateExpenseDto;
 import com.devestudo.projeto_financas.services.ExpenseService;
 import com.devestudo.projeto_financas.services.ExpenseSummaryService;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 
 @RestController

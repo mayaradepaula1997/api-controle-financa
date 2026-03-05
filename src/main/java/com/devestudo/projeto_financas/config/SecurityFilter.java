@@ -57,7 +57,8 @@ public class SecurityFilter  extends OncePerRequestFilter { //A cada requisiçã
 
             // Recebo o token, valido o token, e dps busco o usuário no bd pelo email
             String login =  autenticacaoService.validarTokenJwt(token);
-            User user = userRepository.findByEmail(login);
+            User user = userRepository.findByEmail(login)
+                    .orElseThrow(() -> new  RuntimeException("Usuário não encontrado"));
 
             var autentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
@@ -69,7 +70,5 @@ public class SecurityFilter  extends OncePerRequestFilter { //A cada requisiçã
         filterChain.doFilter(request, response);  //Chama o proximo, autorizou o request
 
     }
-
-
 
 }

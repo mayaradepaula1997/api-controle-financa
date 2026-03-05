@@ -19,6 +19,7 @@ import java.util.Objects;
 @Table(name = "tb_user")
 public class User implements UserDetails {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,9 +40,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("user")
     private List<Category> categories = new ArrayList<>();
-
-   // @OneToMany(mappedBy = "user")
-    //private List<Category> category;
 
     //CONSTRUTOR VAZIO
     public User(){
@@ -127,7 +125,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return this.email;
     }
 
     @Override

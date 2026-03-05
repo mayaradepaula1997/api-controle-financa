@@ -1,6 +1,6 @@
 package com.devestudo.projeto_financas.controller;
 
-import com.devestudo.projeto_financas.entities.dtos.AuthDTo;
+import com.devestudo.projeto_financas.entities.dtos.request.AuthDTo;
 import com.devestudo.projeto_financas.services.AutenticacaoService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

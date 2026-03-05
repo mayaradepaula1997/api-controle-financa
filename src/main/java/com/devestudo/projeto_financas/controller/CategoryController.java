@@ -2,10 +2,10 @@ package com.devestudo.projeto_financas.controller;
 
 import com.devestudo.projeto_financas.entities.Category;
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.CategoryAvailableDto;
-import com.devestudo.projeto_financas.entities.dtos.CategoryResponseDto;
-import com.devestudo.projeto_financas.entities.dtos.CreateCategoryDto;
-import com.devestudo.projeto_financas.entities.dtos.UpdateCategoryDto;
+import com.devestudo.projeto_financas.entities.dtos.request.CategoryAvailableDto;
+import com.devestudo.projeto_financas.entities.dtos.response.CategoryResponseDto;
+import com.devestudo.projeto_financas.entities.dtos.request.CreateCategoryDto;
+import com.devestudo.projeto_financas.entities.dtos.request.UpdateCategoryDto;
 import com.devestudo.projeto_financas.services.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

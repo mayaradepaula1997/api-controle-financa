@@ -1,8 +1,8 @@
 package com.devestudo.projeto_financas.services;
 import com.devestudo.projeto_financas.entities.User;
-import com.devestudo.projeto_financas.entities.dtos.CreateUserDto;
-import com.devestudo.projeto_financas.entities.dtos.UpdateUser;
-import com.devestudo.projeto_financas.entities.dtos.UserDto;
+import com.devestudo.projeto_financas.entities.dtos.request.CreateUserDto;
+import com.devestudo.projeto_financas.entities.dtos.request.UpdateUser;
+import com.devestudo.projeto_financas.entities.dtos.request.UserDto;
 import com.devestudo.projeto_financas.enums.RoleEnum;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
@@ -14,11 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
-
-import java.util.List;
-
 
 
 @Service
@@ -38,11 +33,14 @@ public class UserService {
 
     public User createUser(CreateUserDto userDto) {
 
-        User userExiste = userRepository.findByEmail(userDto.email());
+        var userExiste = userRepository.findByEmail(userDto.email());
 
-        if (userExiste != null) {
+        System.out.println(userExiste);
+
+        if (userExiste.isPresent()) {
             throw new BusinessException("Cliente já existe");
         }
+
 
         String passwordHash = passwordEncoder.encode(userDto.password()); //Chamando o método que vai faer a criptografia da senha
 

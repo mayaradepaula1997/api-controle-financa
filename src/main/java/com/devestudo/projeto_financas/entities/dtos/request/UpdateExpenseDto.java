@@ -1,9 +1,9 @@
-package com.devestudo.projeto_financas.entities.dtos;
+package com.devestudo.projeto_financas.entities.dtos.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record CreateExpenseDto(String name,
+public record UpdateExpenseDto(String name,
                                BigDecimal value,
                                LocalDate localDate,
                                String description,
