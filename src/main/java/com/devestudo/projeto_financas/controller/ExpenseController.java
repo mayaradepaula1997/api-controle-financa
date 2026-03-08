@@ -5,6 +5,7 @@ import com.devestudo.projeto_financas.entities.User;
 import com.devestudo.projeto_financas.entities.dtos.request.CreateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.response.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.request.UpdateExpenseDto;
+import com.devestudo.projeto_financas.entities.dtos.response.ExpenseTotalResponseDto;
 import com.devestudo.projeto_financas.services.ExpenseService;
 import com.devestudo.projeto_financas.services.ExpenseSummaryService;
 import org.springframework.data.domain.Page;
@@ -133,6 +134,29 @@ public class ExpenseController {
 
         return ResponseEntity.ok().body(expenseList);
     }
+
+    //Método que vai retorna o total de gasto
+    @GetMapping("/total")
+    public ResponseEntity<ExpenseTotalResponseDto> getTotalExpense(
+            @AuthenticationPrincipal User user,
+
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String descripion,
+
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateStart,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateEnd
+    ){
+        ExpenseTotalResponseDto total = expenseService.getTotal(
+                user.getId(),
+                categoryId,
+                descripion,
+                dateStart,
+                dateEnd
+        );
+
+        return  ResponseEntity.ok(total);
+    }
+
 
     //Método para atualizar os gastos
     @PutMapping("/{expenseId}")

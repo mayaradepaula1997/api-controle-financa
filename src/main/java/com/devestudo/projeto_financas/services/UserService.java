@@ -40,8 +40,6 @@ public class UserService {
         if (userExiste.isPresent()) {
             throw new BusinessException("Cliente já existe");
         }
-
-
         String passwordHash = passwordEncoder.encode(userDto.password()); //Chamando o método que vai faer a criptografia da senha
 
         User user = new User(
@@ -53,7 +51,6 @@ public class UserService {
         );
 
         return userRepository.save(user);
-
     }
 
     //Método vai retornar os usuários em formato de paginação

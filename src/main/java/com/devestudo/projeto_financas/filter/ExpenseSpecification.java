@@ -39,17 +39,17 @@ public class ExpenseSpecification {
     }
 
     //Busca os gastos de tenha no nome ou na descrição a String que foi passada. Ex: "Uber"
-    public static Specification<Expense> nameOrDescriptionContains(String text){
+    public static Specification<Expense> nameOrDescriptionContains(String text) {
 
-        return (root, query, cb) ->{
+        return (root, query, cb) -> {
 
-           if (text == null || text.isBlank()){
-               return cb.conjunction();  //Não vai filtrar nada, vai trazer todos os gastos
-           }
+            if (text == null || text.isBlank()) {
+                return cb.conjunction();  //Não vai filtrar nada, vai trazer todos os gastos
+            }
 
-           String like = "%" + text.toLowerCase() + "%";  //Permite buscar a palavra e igora maiúsculas/minúsculas
+            String like = "%" + text.toLowerCase() + "%";  //Permite buscar a palavra e igora maiúsculas/minúsculas
 
-            Predicate namePredicate = cb.like(cb.lower(root.get("name")),like); //Condição WHERE, se for verdadeira irá retornar
+            Predicate namePredicate = cb.like(cb.lower(root.get("name")), like); //Condição WHERE, se for verdadeira irá retornar
 
             Predicate descriptionPredicate = cb.like(cb.lower(root.get("description")), like);
 
@@ -60,12 +60,18 @@ public class ExpenseSpecification {
 
     /*Método que vai retorna os gastos por periodo (dataInicio - dataFinal) se não for passado o perido
     vai retornar os gasto daquele mês*/
-    public static Specification<Expense> byPeriod (LocalDate dateStart,LocalDate endDate) {
+    public static Specification<Expense> byPeriod(LocalDate dateStart, LocalDate endDate) {
 
-        return (root, query, cb) ->
-            cb.between(root.get("localDate"), dateStart, endDate);
-        }
+        return (root, query, cb) -> {
+
+            if (dateStart == null || endDate == null) {
+                cb.conjunction();
+            }
+
+           return cb.between(root.get("localDate"), dateStart, endDate);
+        };
 
     }
+}
 
 

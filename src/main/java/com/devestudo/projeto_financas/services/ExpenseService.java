@@ -5,6 +5,7 @@ import com.devestudo.projeto_financas.entities.User;
 import com.devestudo.projeto_financas.entities.dtos.request.CreateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.response.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.request.UpdateExpenseDto;
+import com.devestudo.projeto_financas.entities.dtos.response.ExpenseTotalResponseDto;
 import com.devestudo.projeto_financas.enums.CategoryType;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 
 @Service
@@ -171,6 +173,36 @@ public class ExpenseService {
                             expense.getUser().getName()
                     );
                 });
+    }
+
+
+    //Método que vai retorna a soma de todos os gastos do usuário, com filtros
+    public ExpenseTotalResponseDto getTotal(Long idUse, Long categoryId, String description, LocalDate dateStart, LocalDate dateEnd){
+
+        //PERÍODO PADRÃO - SE O USUÁRIO NÃO INFORMAR O PERÍODO, A SISTEMA ASSUME O MêS ATUAL
+        if (dateStart == null || dateEnd == null) {
+            YearMonth currentMonth = YearMonth.now(); //recupera o mês atual
+            dateStart = currentMonth.atDay(1); //recupera o primeiro dia do mês
+            dateEnd = currentMonth.atEndOfMonth();  //recupera o ultimo dia do mês
+        }
+
+        //Filtro dinâmico
+        Specification<Expense> spen =
+                ExpenseSpecification.byUser(idUse)
+                        .and(ExpenseSpecification.category(categoryId))
+                        .and(ExpenseSpecification.nameOrDescriptionContains(description))
+                        .and(ExpenseSpecification.byPeriod(dateStart, dateEnd));
+
+
+        //Busca todos os gastos no banco de dados, de acordo com o filtro passado em cima
+        List<Expense> expenses = expenseRepository.findAll(spen);
+
+        //Para cada gasto que for retornado, vamos fazer o uso do strem e map, pegando o valor e somando com os proximos
+        BigDecimal total = expenses.stream()
+                .map(Expense::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ExpenseTotalResponseDto(total);
     }
 
 
