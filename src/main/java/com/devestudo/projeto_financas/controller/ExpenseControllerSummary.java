@@ -6,8 +6,10 @@ import com.devestudo.projeto_financas.services.ExpenseSummaryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,8 +23,11 @@ public class ExpenseControllerSummary {
     }
 
     @GetMapping("/expenses")
-    public List<CategorySummaryDto> summary(@AuthenticationPrincipal User user) {
-        return service.getSummaryByUser(user.getId());
+    public List<CategorySummaryDto> summary(@AuthenticationPrincipal User user,
+                                            @RequestParam(required = false) LocalDate startDate,
+                                            @RequestParam(required = false) LocalDate endDate
+    ) {
+        return service.getSummaryByUser(user.getId(), startDate, endDate);
     }
 
 
