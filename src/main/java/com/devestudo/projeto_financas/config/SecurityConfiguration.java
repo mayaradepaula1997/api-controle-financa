@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //servidor não guarda status
                 .authorizeHttpRequests(authoriza-> authoriza
-
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //Rotas Publicas
                         .requestMatchers("/auth/**").permitAll() //rota de autenticação
                         .requestMatchers(HttpMethod.POST,"/users").permitAll() //rota para criar usuario
