@@ -3,6 +3,7 @@ package com.devestudo.projeto_financas.services;
 import com.devestudo.projeto_financas.entities.PasswordResetToken;
 import com.devestudo.projeto_financas.entities.User;
 import com.devestudo.projeto_financas.entities.dtos.request.ResetPasswordRequestDto;
+import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.repository.TokenRepository;
 import com.devestudo.projeto_financas.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,11 @@ public class PasswordResetService {
         //Busca o usuário no banco de dados pelo e-mail
         userRepository.findByEmail(email).ifPresent(user -> {
 
+            passwordResetTokenRepository.findByUser(user).ifPresent(tokenExistente -> {
+                passwordResetTokenRepository.delete(tokenExistente);
+                passwordResetTokenRepository.flush();
+            });
+
             //Gera o token unico e aleátorio
             String token = UUID.randomUUID().toString();
 
@@ -61,17 +67,17 @@ public class PasswordResetService {
 
         //Busca o token no banco de dados
         PasswordResetToken token = passwordResetTokenRepository.findByToken(requestDto.token())
-                .orElseThrow(()-> new RuntimeException("Token inválido"));
+                .orElseThrow(()-> new BusinessException("Token inválido"));
 
 
         //Verifica se o token já foi utilizado
         if (token.isUsed()){
-            throw new RuntimeException("Token já utilizado");
+            throw new BusinessException("Token já utilizado");
         }
 
         //Verifica se o token expirou - isBefore: verifica se passo o prazo
         if (token.getExpirationDate().isBefore(LocalDateTime.now())){
-            throw  new RuntimeException("Token expirado");
+            throw  new BusinessException("Token expirado");
         }
 
         //Recupera o usuário associado ao token, quem terá a senha alterada
