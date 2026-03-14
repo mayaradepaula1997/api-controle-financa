@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration  //Sinaliza para o spring que essa é uma classe de configuração / define como o sistema deve funcionar
 @EnableWebSecurity //Ativa o Spring Security para requisições HTTP
@@ -21,7 +22,10 @@ public class SecurityConfiguration {
 
     private SecurityFilter securityFilter;
 
-    public SecurityConfiguration(SecurityFilter securityFilter) {
+    private final CorsConfigurationSource corsConfigurationSource;
+
+    public SecurityConfiguration(CorsConfigurationSource corsConfigurationSource, SecurityFilter securityFilter) {
+        this.corsConfigurationSource = corsConfigurationSource;
         this.securityFilter = securityFilter;
     }
 
@@ -29,6 +33,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //servidor não guarda status
                 .authorizeHttpRequests(authoriza-> authoriza
