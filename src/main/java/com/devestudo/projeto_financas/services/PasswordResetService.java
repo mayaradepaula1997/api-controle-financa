@@ -16,13 +16,13 @@ import java.util.UUID;
 @Service
 public class PasswordResetService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private TokenRepository passwordResetTokenRepository;
+    private final TokenRepository passwordResetTokenRepository;
 
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public PasswordResetService(UserRepository userRepository, TokenRepository passwordResetTokenRepository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -37,6 +37,7 @@ public class PasswordResetService {
         //Busca o usuário no banco de dados pelo e-mail
         userRepository.findByEmail(email).ifPresent(user -> {
 
+            //Verifica se o usuário já tem um token salvo no banco de dados
             passwordResetTokenRepository.findByUser(user).ifPresent(tokenExistente -> {
                 passwordResetTokenRepository.delete(tokenExistente);
                 passwordResetTokenRepository.flush();

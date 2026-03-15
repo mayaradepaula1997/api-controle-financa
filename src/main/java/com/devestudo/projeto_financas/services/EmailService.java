@@ -25,7 +25,7 @@ public class EmailService {
         try {
             //SimpleMailMessage: Usado para e-mails de textos puros
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("cashflow <mayara.paula200@gmail.com>");
+            message.setFrom("mayara.paula200@gmail.com");
             message.setTo(email); //Define o destinatario do e-mail
             message.setSubject("Redefinição de senha");  //Titulo do e-mail
             message.setText("Clique no link para redefinir sua senha:\n" + link);

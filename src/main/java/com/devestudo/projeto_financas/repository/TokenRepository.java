@@ -11,6 +11,6 @@ public interface TokenRepository extends JpaRepository<PasswordResetToken, Long>
     Optional<PasswordResetToken> findByToken (String token);  //método para buscar o token no banco de dados
 
 
-    //Buscar o usuário detro do banco de dados na tabela de token de recuperação de senha
+    //Buscar o usuário dentro do banco de dados na tabela de token de recuperação de senha
     Optional<PasswordResetToken> findByUser(User user);
 }
