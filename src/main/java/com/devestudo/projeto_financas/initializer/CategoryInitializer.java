@@ -7,9 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 //CLASSE QUE INICIALIZA OS DADOS QUANDO A APLICAÇÃO SUBIR
-@Component  //Quando o prjeto rodar vai procurar por essa anotação. É gerenciada pelo Spring
+@Component  //Quando o projeto rodar vai procurar por essa anotação, que é gerenciada pelo Spring
 public class CategoryInitializer implements CommandLineRunner {
-
 
     private final CategoryRepository categoryRepository;
 
