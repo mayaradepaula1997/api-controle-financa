@@ -7,6 +7,7 @@ import com.devestudo.projeto_financas.entities.dtos.response.ExpenseResponseDto;
 import com.devestudo.projeto_financas.entities.dtos.request.UpdateExpenseDto;
 import com.devestudo.projeto_financas.entities.dtos.response.ExpenseTotalResponseDto;
 import com.devestudo.projeto_financas.enums.CategoryType;
+import com.devestudo.projeto_financas.enums.PaymentMethod;
 import com.devestudo.projeto_financas.exception.BusinessException;
 import com.devestudo.projeto_financas.exception.ResourceNotFoundException;
 import com.devestudo.projeto_financas.filter.ExpenseSpecification;
@@ -42,7 +43,7 @@ public class ExpenseService {
         this.categoryRepository = categoryRepository;
     }
 
-    //Criação de categoria
+    //Criação do gasto
     public Expense createExpense(CreateExpenseDto dto, Long userId){
 
         //Busca o usuário no BD
@@ -62,17 +63,26 @@ public class ExpenseService {
             throw new BusinessException("Categoria não pertence ao usuário");
         }
 
+        if ((dto.paymentMethod() == PaymentMethod.CREDITO ||
+                dto.paymentMethod() == PaymentMethod.DEBITO) &&
+
+                (dto.nameCard() == null || dto.nameCard().isBlank())) {
+
+            throw new BusinessException("Nome do cartão é obrigatório para pagamento em crédito ou débito");
+        }
+
         Expense expense = new Expense(
                 dto.name(),
                 dto.value(),
                 dto.localDate(),
                 dto.description(),
+                dto.paymentMethod(),
+                dto.nameCard(),
                 category,
                 user
         );
 
         return expenseRepository.save(expense);
-
     }
 
     //Listar por Id
@@ -167,6 +177,8 @@ public class ExpenseService {
                             expense.getValue(),
                             expense.getLocalDate(),
                             expense.getDescription(),
+                            expense.getPaymentMethod(),
+                            expense.getNameCard(),
                             catId,
                             catName,
                             expense.getUser().getId(),
@@ -217,22 +229,52 @@ public class ExpenseService {
             throw new BusinessException("Gasto não encontrado");
         }
 
-        if(updateExpenseDto.name() != null)expense.setName(updateExpenseDto.name());
+        if (updateExpenseDto.name() != null)expense.setName(updateExpenseDto.name());
 
-        if(updateExpenseDto.value() != null)expense.setValue(updateExpenseDto.value());
+        if (updateExpenseDto.value() != null)expense.setValue(updateExpenseDto.value());
 
         if (updateExpenseDto.localDate() != null) expense.setLocalDate(updateExpenseDto.localDate());
 
         if (updateExpenseDto.description() != null)expense.setDescription(updateExpenseDto.description());
 
+        //Atualização da forma de pagamento
+        if (updateExpenseDto.paymentMethod() != null) {
+
+            expense.setPaymentMethod(updateExpenseDto.paymentMethod());
+
+            //SE a forma de pagamento não for CREDITO, limpa o campo "nameCard"
+            if (updateExpenseDto.paymentMethod() != PaymentMethod.CREDITO &&
+                updateExpenseDto.paymentMethod() != PaymentMethod.DEBITO) {
+                expense.setNameCard(null);
+            }
+        }
+
+        //Atualizar o nameCard, apenas de a forma de pagamento for CRÉDITO ou DEBITO
+        if (updateExpenseDto.nameCard() != null){
+
+            if (expense.getPaymentMethod() != PaymentMethod.CREDITO &&
+                    (expense.getPaymentMethod() != PaymentMethod.DEBITO)){
+                throw new BusinessException("Só é permitido informar nome do cartão, para pagamento em credito ou debito");
+            }
+
+            expense.setNameCard(updateExpenseDto.nameCard());
+        }
+
+        //Validar o nome do cartão, quando a atualização do pagamento e feita para cartão crédito
+        if ((expense.getPaymentMethod() == PaymentMethod.CREDITO ||
+        expense.getPaymentMethod() == PaymentMethod.DEBITO) &&
+        (expense.getNameCard() == null || expense.getNameCard().isBlank())){
+            throw new BusinessException("Nome do cartão é obrigatório para pagamento em crédito ou débito");
+        }
+
         //É NECESSARIA BUSCAR A CATEGORIA, PORQUE O DTO ESPERA UM LONG E O SETCATEGORY UMA CATEGORIA
         //NESSE CASO VOU TRAZER A CATEGORIA ATRAVES DO SEU ID
-        if(updateExpenseDto.categoryId() != null){
+        if (updateExpenseDto.categoryId() != null){
             Category category = categoryRepository.findById(updateExpenseDto.categoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Categoria não existe"));
 
             //O usuário só deve ser bloqueado se a categoria for do tipo USER e não pertencer a ele
-            //SÓ verifique o usuário se a categoria for do tipo USER
+            //SÓ verifique o usuário, se a categoria for do tipo USER
             if (category.getCategoryType() == CategoryType.USER &&
             !category.getUser().getId().equals(idUser)){
 

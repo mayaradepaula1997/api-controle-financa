@@ -39,6 +39,15 @@ public class PasswordResetService {
 
             //Verifica se o usuário já tem um token salvo no banco de dados
             passwordResetTokenRepository.findByUser(user).ifPresent(tokenExistente -> {
+
+                //Verifica se o token não foi usado e se o tempo de expiração ainda está no futuro
+                if (!tokenExistente.isUsed() &&
+                        tokenExistente.getExpirationDate().isAfter(LocalDateTime.now())) {
+
+                    throw new RuntimeException(
+                            "Você já possui uma solicitação ativa. Aguarde 30 minutos para solicitar novamente."
+                    );
+                }
                 passwordResetTokenRepository.delete(tokenExistente);
                 passwordResetTokenRepository.flush();
             });

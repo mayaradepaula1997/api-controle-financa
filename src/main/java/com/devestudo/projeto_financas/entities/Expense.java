@@ -1,5 +1,6 @@
 package com.devestudo.projeto_financas.entities;
 
+import com.devestudo.projeto_financas.enums.PaymentMethod;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -22,6 +23,11 @@ public class Expense {
 
     private String description;
 
+    @Enumerated(EnumType.STRING) //Quando o ENUM estiver persistindo no BD, ele será salvo com string e não com enumeração
+    private PaymentMethod paymentMethod;
+
+    private String nameCard;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true) //Deixar categoria como opcional
     private Category category; // opcional
@@ -36,23 +42,31 @@ public class Expense {
     }
 
     //CONSTRUTOR COM ARGUMENTOS
-    public Expense(String name, BigDecimal value, LocalDate localDate, String description, Category category, User user) {
+    public Expense(String name, BigDecimal value, LocalDate localDate, String description, PaymentMethod paymentMethod, String nameCard, Category category, User user) {
         this.name = name;
         this.value = value;
         this.localDate = localDate;
         this.description = description;
+        this.paymentMethod = paymentMethod;
+        this.nameCard = nameCard;
         this.category = category;
         this.user = user;
     }
 
     //CONSTRUTOS SEM A CATEGORIA
-    public Expense(Long id, String name, BigDecimal value, LocalDate localDate, String description, User user) {
+    public Expense(Long id, String name, BigDecimal value, LocalDate localDate, String description, PaymentMethod paymentMethod, String nameCard, User user) {
         this.id = id;
         this.name = name;
         this.value = value;
         this.localDate = localDate;
         this.description = description;
+        this.paymentMethod = paymentMethod;
+        this.nameCard = nameCard;
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -61,10 +75,6 @@ public class Expense {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public BigDecimal getValue() {
@@ -89,6 +99,22 @@ public class Expense {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getNameCard() {
+        return nameCard;
+    }
+
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
     }
 
     public Category getCategory() {
