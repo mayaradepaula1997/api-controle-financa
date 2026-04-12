@@ -1,5 +1,6 @@
 package com.devestudo.projeto_financas.filter;
 import com.devestudo.projeto_financas.entities.Expense;
+import com.devestudo.projeto_financas.enums.PaymentMethod;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
@@ -65,12 +66,19 @@ public class ExpenseSpecification {
         return (root, query, cb) -> {
 
             if (dateStart == null || endDate == null) {
-                cb.conjunction();
+                return cb.conjunction();
             }
 
            return cb.between(root.get("localDate"), dateStart, endDate);
         };
 
+    }
+
+    //Método que filtar por forma de pagamento (Crédito ou Débito - IA)
+    public static Specification<Expense> byPaymentMethod(PaymentMethod paymentMethod){
+        return ((root, query, cb) ->
+                paymentMethod == null ? cb.conjunction() //não vai filtar nada
+                        :cb.equal(root.get("paymentMethod"),paymentMethod));
     }
 }
 
